@@ -1,7 +1,6 @@
 import numpy as np
 import GaussJordan as gj
 import Pivot as piv
-from scipy import linalg
 
 def LUDecomp(A):
 	size = A.shape
