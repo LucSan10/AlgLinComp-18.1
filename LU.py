@@ -4,7 +4,8 @@ import Pivot as p
 
 def LUDecomp(A):
 	if np.linalg.cond(A) > 10**6:
-		print("the matrix\n\n"+str(A)+"\n\ncannot be inverted")
+		print("the matrix\n"+str(A.view())+"\ncannot be inverted")
+		return
 	size = A.shape
 	P = np.eye(size[0], size[1], dtype = float)
 	L = np.copy(P)
