@@ -1,4 +1,5 @@
 import numpy as np
+import GaussJordan as gj
 
 def twoByTwoInv(matrix):
 	
@@ -14,3 +15,30 @@ def twoByTwoInv(matrix):
 
 	return invMatrix
 
+def leastSq(A):
+
+	size = A.shape[0]
+	X = A[:,0][:,np.newaxis]
+	Y = A[:,1][:,np.newaxis]
+
+	P = np.concatenate((np.ones((size,1)),X))
+	A = P.T.dot(P)
+	C = P.T.dot(Y)
+
+	invA = twoByTwoInv(A)
+	B = invA.dot(C)
+
+	return B
+
+def interPol(A):
+
+	degree = A.shape[0]
+	X = A[:,0][:,np.newaxis]
+	Y = A[:,1][:,np.newaxis]
+
+	P = np.concatenate([X**i for i in range(0,degree)], axis = 1)
+	B = gj.gaussElim(P,Y)
+
+	return B
+
+def interLag(A):
