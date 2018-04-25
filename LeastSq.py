@@ -1,5 +1,6 @@
 import numpy as np
 import GaussJordan as gj
+import Subs as sub
 
 def twoByTwoInv(matrix):
 	
@@ -37,8 +38,7 @@ def interPol(A):
 	Y = A[:,1][:,np.newaxis]
 
 	P = np.concatenate([X**i for i in range(0,degree)], axis = 1)
-	B = gj.gaussElim(P,Y)
+	(D,C,M) = gj.gaussElim(P,Y)
+	B = sub.backSub(D,C)
 
 	return B
-
-def interLag(A):
