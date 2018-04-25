@@ -107,7 +107,7 @@ print("\nProof:\n" + str(L.dot(Y)))
 
 #####################################################################################################################################
 
-print("# Cholesky Decomposition:\n")
+print("\n\n# Cholesky Decomposition:\n")
 
 print("\nStarting matrices:\n\nA:\n")
 print(A)
