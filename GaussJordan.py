@@ -1,5 +1,6 @@
 import numpy as np
-import BackSub as bs
+import Pivot as p
+import Subs as sub
 
 def gauss(A, index, upper = False):
 	size = A.shape
@@ -36,7 +37,7 @@ def gaussElim(A, B, jordan = False):
 				D = tempP.dot(D)
 				P = tempP.dot(P)
 			if error: raise ValueError("the matrix\n\n"+str(A)+"\n\ncannot be inverted")
-			(tempM, D) = gauss(D, i, upper = jordan)
+			(tempM, D) = gauss(D, i, True)
 			B = tempM.dot(B)
 			M = tempM.dot(M)
 
@@ -49,22 +50,26 @@ def inverse(A, B):
  
 # Question 2)
 
-A = np.array([[5,-4,1,0],[-4,6,-4,1],[1,-4,6,-4],[0,1,-4,5]], dtype = float)
-B = np.array([[-1],[0],[1],[0]], dtype = float)
+#A = np.array([[1,1,1],[1,2,4],[1,3,9],[1,4,16]], dtype = float)
+#A = np.array([[5,-4,1,0],[-4,6,-4,1],[1,-4,6,-4],[0,1,-4,5]], dtype = float)
+A = np.array([[1,2],[3,4]])
+#B = np.array([[1],[2],[9],[20]], dtype = float)
+B = np.array([[-1],[0]], dtype = float)
+
 
 print("Starting matrices:\n\nA:\n")
 print(A)
 print("\nB:\n")
 print(B)
 
-(D,B,M) = gaussElim(A,B,jordan=True)
+(D,B,M) = gaussElim(A,B,True)
 
 Inv = inverse(A,B)
 
 print("\nA^-1 is:\n" + str(Inv))
 print("\nProof:\n" + str(Inv.dot(A)))
-
-X = bs.backSub(D,B,diag=True)
+"""
+X = sub.backSub(D,B)
 
 print("\nM is:\n" + str(M))
 print("\nLet DX = B")
@@ -72,3 +77,4 @@ print("\nD equals:\n" + str(D.astype(float)))
 print("\nX equals:\n" + str(X))
 print("\nB equals:\n" + str(B))
 print("\nProof:\n" + str(D.dot(X)))
+"""

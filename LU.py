@@ -1,7 +1,7 @@
 import numpy as np
 import GaussJordan as gj
 import Pivot as p
-import BackSub as bs
+import Subs as sub
 
 # Question 1.a)
 
@@ -13,6 +13,7 @@ def LUDecomp(A):
 	P = np.eye(size[0], size[1], dtype = float)
 	L = np.copy(P)
 	U = np.copy(A)
+	det = 1
 	error = 0
 
 	for i in range(size[0]-1):
@@ -20,13 +21,15 @@ def LUDecomp(A):
 			(tempP,error) = p.pivot(U, i, 1)
 			U = tempP.dot(U)
 			P = tempP.dot(P)
-			L = P.dot(L.dot(tempP))
+			det *= -1
 	
 		if error: raise ValueError("the matrix\n\n"+str(A)+"\n\ncannot be inverted")
 		(tempL, U) = gj.gauss(U, i)
 		L[i+1:, i] = -tempL.dot(L)[i+1:, i]
 	
-	return (P,L,U)
+	det *= np.prod(np.diag(U))
+	return (P,L,U,det)
+
 
 print("\n\n# Question 2\n")
 
@@ -38,21 +41,22 @@ print(A)
 print("\nB:\n")
 print(B)
 
-(P,L,U) = LUDecomp(A)
+(P,L,U,det) = LUDecomp(A)
+print(det)
 
 B = P.dot(B)
+L = P.dot(L)
 
-print("\nLet A = PLU:")
-print("\nP equals:\n" + str(P))
+print("\nLet A = LU:")
 print("\nL equals:\n" + str(L))
 print("\nU equals:\n" + str(U))
 
-print("\nProof:\n" + str(P.dot(L.dot(U))))
+print("\nProof:\n" + str(L.dot(U)))
 
 print("Assuming that UX = Y, we have LY = B")
 print("\nGiven that AX = B, then LUX = B")
-Y = bs.backSub(L,B,upper=False)
-X = bs.backSub(U,Y)
+Y = sub.frontSub(L,B)
+X = sub.backSub(U,Y)
 
 print("\nX equals:\n" + str(X))
 print("\nY equals:\n" + str(Y))
@@ -69,21 +73,24 @@ for i in range(10):
 		else: Matrix[i,i] = 19-np.abs(3-i)
 Matrix = Matrix.astype(float)
 
-Res = np.array([[4],[0],[8],[0],[12],[0],[8],[0],[4],[0]], dtype = float)
+Res = np.empty((10,1))
+for i in range(0,10,2):
+	Res[i] = 12-abs(2*i-8)
 
-(Pm,Lm,Um) = LUDecomp(Matrix)
+(Pm,Lm,Um,det) = LUDecomp(Matrix)
+
 Res = Pm.dot(Res)
+Lm = Pm.dot(Lm)
 
-print("\nLet A = PLU; given that AX = B, then LUX = B")
+print("\nLet A = LU; given that AX = B, then LUX = B")
 print("Assuming that UX = Y, we have LY = B")
-print("\nP equals:\n" + str(Pm))
 print("\nL equals:\n" + str(Lm))
 print("\nU equals:\n" + str(Um))
 
-print("\nProof:\n" + str(Pm.dot(Lm.dot(Um))))
+print("\nProof:\n" + str(Lm.dot(Um)))
 
-YFinal = bs.backSub(Lm,Res,upper=False)
-XFinal = bs.backSub(Um,YFinal)
+YFinal = sub.frontSub(Lm,Res)
+XFinal = sub.backSub(Um,YFinal)
 
 print("\nX equals:\n" + str(XFinal))
 print("\nY equals:\n" + str(YFinal))
