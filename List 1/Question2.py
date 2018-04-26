@@ -109,6 +109,9 @@ print("\nProof:\n" + str(L.dot(Y)))
 
 print("\n\n# Cholesky Decomposition:\n")
 
+A = np.array([[5,-4,1,0],[-4,6,-4,1],[1,-4,6,-4],[0,1,-4,5]], dtype = float)
+B = np.array([[-1],[0],[1],[0]])
+
 print("\nStarting matrices:\n\nA:\n")
 print(A)
 print("\nB:\n")
@@ -138,6 +141,9 @@ print("\nProof:\n" + str(L.dot(Y)))
 
 print("\n\n# Question 2 b\n")
 
+A = np.array([[5,-4,1,0],[-4,6,-4,1],[1,-4,6,-4],[0,1,-4,5]], dtype = float)
+B = np.array([[-1],[0],[1],[0]])
+
 print("Starting matrices:\n\nA:\n")
 print(A)
 print("\nB:\n")
@@ -154,6 +160,9 @@ print("\nProof:\n" + str(Inv.dot(A)))
 #####################################################################################################################################
 
 print("\n\n# Question 2 c\n")
+
+A = np.array([[5,-4,1,0],[-4,6,-4,1],[1,-4,6,-4],[0,1,-4,5]], dtype = float)
+B = np.array([[-1],[0],[1],[0]])
 
 print("Starting matrices:\n\nA:\n")
 print(A)

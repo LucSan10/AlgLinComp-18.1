@@ -11,6 +11,9 @@ B = np.array([[1],[-1],[1]], dtype = float)
 
 print("\n\n# Question 3 c\n")
 
+A = np.array([[3,2,0],[2,3,-1],[0,-1,3]], dtype = float)
+B = np.array([[1],[-1],[1]], dtype = float)
+
 print("\nStarting matrices:\n\nA:\n")
 print(A)
 
@@ -58,6 +61,9 @@ print("\nProof: AX aprox= B\n"+str(A.dot(X)))
 #####################################################################################################################################
 
 print("\n\n# Cholesky:\n")
+
+A = np.array([[3,2,0],[2,3,-1],[0,-1,3]], dtype = float)
+B = np.array([[1],[-1],[1]], dtype = float)
 
 print("\nStarting matrices:\n\nA:\n")
 print(A)
