@@ -4,10 +4,10 @@ import Subs as sub
 
 def twoByTwoInv(matrix):
 	
-	if not (A.shape[0] == A.shape[1] == 2): raise ValueError("The matrix\n"+str(matrix)+"\nis not 2x2")
+	if not (matrix.shape[0] == matrix.shape[1] == 2): raise ValueError("The matrix\n"+str(matrix)+"\nis not 2x2")
 	
 	invMatrix = np.copy(matrix)
-	I = np.eye(2)
+	I = np.eye(2, dtype = bool)
 
 	den = invMatrix[0,0]*invMatrix[1,1]-invMatrix[1,0]*invMatrix[0,1]
 	invMatrix = invMatrix[[1,0]].T[[1,0]]
@@ -22,7 +22,7 @@ def leastSq(A):
 	X = A[:,0][:,np.newaxis]
 	Y = A[:,1][:,np.newaxis]
 
-	P = np.concatenate((np.ones((size,1)),X))
+	P = np.concatenate((np.ones((size,1)),X), axis = 1)
 	A = P.T.dot(P)
 	C = P.T.dot(Y)
 

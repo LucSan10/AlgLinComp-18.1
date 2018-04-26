@@ -15,4 +15,8 @@ for i in range(int(n)):
 
 A = np.array(arr)
 
+B = ls.leastSq(A)
+
 print(A)
+print("\n")
+print(B)
