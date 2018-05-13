@@ -21,18 +21,18 @@ Lm = Pm.dot(Lm)
 print("\nA equals:\n" + str(Matrix))
 print("\nB equals:\n" + str(Res))
 
-print("\nLet A = LU; given that AX = B, then LUX = B")
-print("Assuming that UX = Y, we have LY = B")
 print("\nL equals:\n" + str(Lm))
 print("\nU equals:\n" + str(Um))
 
-print("\nProof:\n" + str(Lm.dot(Um)))
+print("\nProof (LU = A):\n" + str(Lm.dot(Um)))
 
+print("\nLet A = LU; given that AX = B, then LUX = B")
+print("Assuming that UX = Y, we have LY = B")
 YFinal = sub.frontSub(Lm,Res)
 XFinal = sub.backSub(Um,YFinal)
 
 print("\nX equals:\n" + str(XFinal))
 print("\nY equals:\n" + str(YFinal))
-print("\nProof:\n" + str(Um.dot(XFinal)))
+print("\nProof (UX = Y):\n" + str(Um.dot(XFinal)))
 print("\nB equals:\n" + str(Res))
-print("\nProof:\n" + str(Lm.dot(YFinal)))
+print("\nProof (LY = B):\n" + str(Lm.dot(YFinal)))

@@ -25,21 +25,16 @@ print("\nB:\n")
 print(B)
 print("\n")
 
-(D,B,M) = gj.gaussElim(A,B)
+(U,B,L) = gj.gaussElim(A,B)
 
-Inv = gj.inverse(A,B)
+X = sub.backSub(U,B)
 
-print("\nA^-1 is:\n" + str(Inv))
-print("\nProof:\n" + str(Inv.dot(A)))
-
-X = sub.backSub(D,B)
-
-print("\nM is:\n" + str(M))
-print("\nLet DX = B")
-print("\nD equals:\n" + str(D.astype(float)))
+print("\nL is:\n" + str(L))
+print("\nLet UX = B")
+print("\nU equals:\n" + str(U.astype(float)))
 print("\nX equals:\n" + str(X))
 print("\nB equals:\n" + str(B))
-print("\nProof:\n" + str(D.dot(X)))
+print("\nProof (UX = B):\n" + str(U.dot(X)))
 
 #####################################################################################################################################
 
@@ -57,9 +52,6 @@ print("\n")
 
 (D,B,M) = gj.gaussElim(A,B, True)
 
-print("\nA^-1 is:\n" + str(Inv))
-print("\nProof:\n" + str(Inv.dot(A)))
-
 X = sub.backSub(D,B)
 
 print("\nM is:\n" + str(M))
@@ -67,7 +59,7 @@ print("\nLet DX = B")
 print("\nD equals:\n" + str(D.astype(float)))
 print("\nX equals:\n" + str(X))
 print("\nB equals:\n" + str(B))
-print("\nProof:\n" + str(D.dot(X)))
+print("\nProof (DX = B):\n" + str(D.dot(X)))
 
 #####################################################################################################################################
 
@@ -80,10 +72,8 @@ print("\nStarting matrices:\n\nA:\n")
 print(A)
 print("\nB:\n")
 print(B)
-print("\n")
 
 (P,L,U,det) = lu.LUDecomp(A)
-print(det)
 
 B = P.dot(B)
 L = P.dot(L)
@@ -92,18 +82,18 @@ print("\nLet A = LU:")
 print("\nL equals:\n" + str(L))
 print("\nU equals:\n" + str(U))
 
-print("\nProof:\n" + str(L.dot(U)))
+print("\nProof (A = LU):\n" + str(L.dot(U)))
 
-print("Assuming that UX = Y, we have LY = B")
 print("\nGiven that AX = B, then LUX = B")
+print("Assuming that UX = Y, we have LY = B")
 Y = sub.frontSub(L,B)
 X = sub.backSub(U,Y)
 
 print("\nX equals:\n" + str(X))
 print("\nY equals:\n" + str(Y))
-print("\nProof:\n" + str(U.dot(X)))
+print("\nProof (UX = Y):\n" + str(U.dot(X)))
 print("\nB equals:\n" + str(B))
-print("\nProof:\n" + str(L.dot(Y)))
+print("\nProof (LY = B):\n" + str(L.dot(Y)))
 
 #####################################################################################################################################
 
@@ -123,7 +113,7 @@ print("\n")
 print("\nLet A = LLt:")
 print("\nL equals:\n" + str(L))
 print("\nLt equals:\n" + str(LT))
-print("\nL * Lt equals:\n" + str(L.dot(LT)))
+print("\nProof (LLt = A):\n" + str(L.dot(LT)))
 
 print("\nGiven that AX = B, then LLtX = B")
 print("Assuming that LtX = Y, we have LY = B")
@@ -133,9 +123,9 @@ X = sub.backSub(LT,Y)
 
 print("\nX equals:\n" + str(X))
 print("\nY equals:\n" + str(Y))
-print("\nProof:\n" + str(LT.dot(X)))
+print("\nProof (LtX = Y):\n" + str(LT.dot(X)))
 print("\nB equals:\n" + str(B))
-print("\nProof:\n" + str(L.dot(Y)))
+print("\nProof (LY = B):\n" + str(L.dot(Y)))
 
 #####################################################################################################################################
 
@@ -155,7 +145,7 @@ print("\n")
 Inv = gj.inverse(A,B)
 
 print("\nA^-1 is:\n" + str(Inv))
-print("\nProof:\n" + str(Inv.dot(A)))
+print("\nProof ((A^-1)A = I):\n" + str(Inv.dot(A)))
 
 #####################################################################################################################################
 
@@ -172,4 +162,4 @@ print("\n")
 
 (L,LT,det) = ch.choleskyDecomp(A)
 
-print("Det(A) = " + str(det))
+print("det(A) = " + str(det))
