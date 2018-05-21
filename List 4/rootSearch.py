@@ -24,14 +24,14 @@ def derivative(function, a, i = None, delta = 0.0001):
 		back = function(a-delta)
 		return (front-back)/(2*delta)
 
-
+#####################################################################################
 
 def richardExtrapol(function, a, b = 0.5, q = 2):
 	d1 = derivative(function, a, delta = 0.5)
 	d2 = derivative(function, a, delta = 0.5/q)
 	return d1 + (d1-d2)/((1/q)-1)
 
-
+#####################################################################################
 
 def bisecRoot(function, start, end, tol = 0.001):
 	if function(start)*function(end) > 0:
@@ -49,7 +49,7 @@ def bisecRoot(function, start, end, tol = 0.001):
 		i += 1
 	return (root,i)
 
-
+#####################################################################################
 
 def newtonRoot(function, x0, tol = 0.0001, reps = 1000):
 	for i in range(reps):
@@ -59,9 +59,9 @@ def newtonRoot(function, x0, tol = 0.0001, reps = 1000):
 			return (x1,i)
 		x0 = x1
 	
-	raise ValueError("newtonRoot() method with given x0 = "+str(x0)+" did not reach convergence.")
+	raise ValueError("newtonRoot() method did not reach convergence.")
 
-
+#####################################################################################
 
 def secantRoot(function, x0, tol = 0.0001, reps = 1000, delta = 0.01):
 	x1 = x0+delta
@@ -77,9 +77,9 @@ def secantRoot(function, x0, tol = 0.0001, reps = 1000, delta = 0.01):
 		x0 = x1
 		x1 = x2
 	
-	raise ValueError("secantRoot() method with given x0 = "+str(x0)+" and delta = "+str(delta)+" did not reach convergence.")
+	raise ValueError("secantRoot() method did not reach convergence.")
 
-
+#####################################################################################
 
 def inverseInterpolRoot(function, x1, x2, x3, tol = 0.0001, reps = 1000):
 	l = [x1,x2,x3]
@@ -102,11 +102,11 @@ def inverseInterpolRoot(function, x1, x2, x3, tol = 0.0001, reps = 1000):
 		l[np.argmax(np.abs(l))] = x4
 		l.sort()
 		[x1,x2,x3] = l
-		x0 = x4-x03
+		x0 = x4
 
-	raise ValueError("inverseInterpolRoot() method with starting x1, x2, x3 = ["+str(x1)+", "+str(x2)+", "+str(x3)+"] did not reach convergence")
+	raise ValueError("inverseInterpolRoot() method did not reach convergence")
 
-
+#####################################################################################
 
 def newtonMultiEq(functions, tol = 0.0001, reps = 1000):
 	size = len(functions)
@@ -125,14 +125,14 @@ def newtonMultiEq(functions, tol = 0.0001, reps = 1000):
 		DeltaX = sub.backSub(U,B)
 		
 		X += DeltaX
-		N1 = X.T.dot(X)**0.5
+		N = X.T.dot(X)**0.5
 		NDelta = DeltaX.T.dot(DeltaX)**0.5
 		
-		if NDelta/N1 < tol: return (X,i)
+		if NDelta/N < tol: return (X,i)
 
-	raise ValueError("newtonMultiEq() method with starting vector X:\n"+str(np.ones((size,1)))+"\n\ndid not reach convergence.")
+	raise ValueError("newtonMultiEq() method did not reach convergence.")
 
-
+#####################################################################################
 
 def broydenMultiEq(functions, tol = 0.0001, reps = 1000):
 	size = len(functions)
@@ -150,9 +150,9 @@ def broydenMultiEq(functions, tol = 0.0001, reps = 1000):
 		DeltaX = sub.backSub(U,B)
 
 		X += DeltaX
-		N1 = X.T.dot(X)**0.5
+		N = X.T.dot(X)**0.5
 		NDelta = DeltaX.T.dot(DeltaX)**0.5
-		if NDelta/N1 < tol: return (X,i)
+		if NDelta/N < tol: return (X,i)
 
 		F1 = fun(X)
 		Y = F1 - F0
@@ -162,30 +162,49 @@ def broydenMultiEq(functions, tol = 0.0001, reps = 1000):
 	X = np.array([[0.5*i] for i in range(size)])
 	J = np.array([[0.5*i+0.5*j for i in range(size)] for j in range(size-1, -1, -1)])
 
-	raise ValueError("broydenMultiEq() method with starting vector X:\n"+str(X)+"\n\nand J:\n"+str(J)+"\n\ndid not reach convergence.")
+	raise ValueError("broydenMultiEq() method did not reach convergence.")
 
-
+#####################################################################################
 
 def nonLinearLSQ(function, n, X, Y, tol = 0.0001, reps = 1000):
-	B = np.ones((X.size,n))
-	symbolFunctions = sp.Matrix(sp.sympify(functions))
-	symbolList = sp.symbols("x1:%d"%(n+1))
+
+	B = np.ones((n,1))
+	
+	x, y = sp.symbols("x y")
+	symbolList = sp.symbols("b1:%d"%(n+1))
+	tmp = np.vectorize(sp.lambdify((x,y), sp.sympify(function), modules = "sympy"))
+
+	symbolFunctions = sp.Matrix(tmp(X,Y))
 	fun = sp.lambdify([symbolList], symbolFunctions)
 
 	for i in range(reps):
+		
+		F = fun(B)
+		J = derivative(fun, B, i = n-1)
+		
+		P = J.T.dot(J)
+		tmpB1 = -J.T.dot(F)
 
-functions = ["x1 + x2 - 1", "x1 - x2 + 1"]
-fun = sp.Matrix(sp.sympify(functions))
-l = sp.symbols("x1 x2")
-f = sp.lambdify([l], fun)
-v = np.array([1,2], dtype = float)
+		(U,tmpB2,L) = gj.gaussElim(P, tmpB1)
+		DeltaB = sub.backSub(U,tmpB2)
 
-print(derivative(f,v))
-print(richardExtrapol(f,v))
+		B += DeltaB
+		NB = B.T.dot(B)**0.5
+		NDelta = DeltaB.T.dot(DeltaB)**0.5
 
+		if NDelta/NB < tol: return (B,i)
+
+	raise ValueError("nonLinearLSQ() method did not reach convergence.")
+
+#####################################################################################
+
+functions = "exp((x**b1)/b2)-y"
+
+X = np.array([[1],[2],[3]], dtype = float)
+Y = np.array([[1.995],[1.410],[1.26]], dtype = float)
 
 startTime = time.time()
-(X,i) = broydenMultiEq(functions)
+(X,i) = nonLinearLSQ(functions, 2, X, Y)
 endTime = time.time()
 
 print("\nX:\n"+str(X))
