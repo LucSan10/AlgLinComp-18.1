@@ -4,6 +4,8 @@ import sympy as sp
 import GaussJordan as gj
 import Subs as sub
 
+####### -- Derivação Numérica: Método Tradicional -- ####################################
+
 def derivative(function, a, i = None, delta = 0.0001):
 	if type(a) == np.ndarray:
 		if i == None: i = a.size-1
@@ -24,14 +26,14 @@ def derivative(function, a, i = None, delta = 0.0001):
 		back = function(a-delta)
 		return (front-back)/(2*delta)
 
-#####################################################################################
+####### -- Derivação Numérica: Extrapolação de Richardson -- ############################
 
 def richardExtrapol(function, a, b = 0.5, q = 2):
 	d1 = derivative(function, a, delta = 0.5)
 	d2 = derivative(function, a, delta = 0.5/q)
 	return d1 + (d1-d2)/((1/q)-1)
 
-#####################################################################################
+####### -- Raízes de uma Equação: Método da Bissecção -- ################################
 
 def bisecRoot(function, start, end, tol = 0.001):
 	if function(start)*function(end) > 0:
@@ -49,7 +51,7 @@ def bisecRoot(function, start, end, tol = 0.001):
 		i += 1
 	return (root,i)
 
-#####################################################################################
+####### -- Raízes de uma Equação: Método de Newton -- ###################################
 
 def newtonRoot(function, x0, tol = 0.0001, reps = 1000):
 	for i in range(reps):
@@ -61,7 +63,7 @@ def newtonRoot(function, x0, tol = 0.0001, reps = 1000):
 	
 	raise ValueError("newtonRoot() method did not reach convergence.")
 
-#####################################################################################
+####### -- Raízes de uma Equação: Método da Secante -- ##################################
 
 def secantRoot(function, x0, tol = 0.0001, reps = 1000, delta = 0.01):
 	x1 = x0+delta
@@ -79,7 +81,7 @@ def secantRoot(function, x0, tol = 0.0001, reps = 1000, delta = 0.01):
 	
 	raise ValueError("secantRoot() method did not reach convergence.")
 
-#####################################################################################
+####### -- Raízes de uma Equação: Método da Interpolação Inversa -- #####################
 
 def inverseInterpolRoot(function, x1, x2, x3, tol = 0.0001, reps = 1000):
 	l = [x1,x2,x3]
@@ -106,7 +108,7 @@ def inverseInterpolRoot(function, x1, x2, x3, tol = 0.0001, reps = 1000):
 
 	raise ValueError("inverseInterpolRoot() method did not reach convergence")
 
-#####################################################################################
+####### -- Método de Newton p/ Sistemas Multi-Dimensionais -- ###########################
 
 def newtonMultiEq(functions, tol = 0.0001, reps = 1000):
 	size = len(functions)
@@ -132,7 +134,7 @@ def newtonMultiEq(functions, tol = 0.0001, reps = 1000):
 
 	raise ValueError("newtonMultiEq() method did not reach convergence.")
 
-#####################################################################################
+####### -- Método de Broyden p/ Sistemas Multi-Dimensionais -- #########################
 
 def broydenMultiEq(functions, tol = 0.0001, reps = 1000):
 	size = len(functions)
@@ -164,7 +166,7 @@ def broydenMultiEq(functions, tol = 0.0001, reps = 1000):
 
 	raise ValueError("broydenMultiEq() method did not reach convergence.")
 
-#####################################################################################
+####### -- Mínimos Quadrados Não-Linear -- ##############################################
 
 def nonLinearLSQ(function, n, X, Y, tol = 0.0001, reps = 1000):
 
@@ -196,7 +198,7 @@ def nonLinearLSQ(function, n, X, Y, tol = 0.0001, reps = 1000):
 
 	raise ValueError("nonLinearLSQ() method did not reach convergence.")
 
-#####################################################################################
+#########################################################################################
 
 functions = "exp((x**b1)/b2)-y"
 

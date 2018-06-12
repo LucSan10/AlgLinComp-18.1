@@ -2,7 +2,7 @@
 
 import math
 import matplotlib.pyplot as plt
-from Funcao import Funcao
+from Funcao import *
 import os
 
 def h(x):
@@ -65,5 +65,8 @@ plt.show()
 plt.plot(t,rkn,'ro')
 plt.ylabel('R.K.N')
 plt.show()
+
+
+
 
 print("Fim do programa.")

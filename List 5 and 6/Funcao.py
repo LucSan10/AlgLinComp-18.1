@@ -1,4 +1,7 @@
 import math
+import numpy as np
+import GaussJordan as gj
+import Subs as sub
 
 class Funcao:
 
@@ -72,25 +75,26 @@ class Funcao:
         self.funcao = f;
 
     def integracao_quadratura(self, a, b, num):
-        """a e b sendo intervalo e num o número de pontos determinado"""
+        """a e b sendo intervalo e numeroDePassos o número de pontos determinado"""
         pontos = self.Quad.get(num).get("pontos")
         pesos = self.Quad.get(num).get("pesos")
 
         soma = 0
         for  i in range(num):
-            soma += self.funcao(0.5*(a+b+pontos[i]*abs(b-a)))*pesos[i]
+            soma += self.funcao(0.5*(a+b+pontos[i]*(b-a)))*pesos[i]
 
-        return soma
+        return ((b-a)/2.0)*soma
 
     def Runge_Kutta2(self, ti, tf, x0):
         """Resolve a EDO."""
 
         h = 0.1
-        num = int(1 + (tf-ti)/h)
-        x = [0 for i in range(num)]
+        deltaT = (tf-ti)
+        numeroDePassos = int(1 + (tf-ti)/h)
+        x = [0 for i in range(numeroDePassos)]
         x[0] = x0
         t = ti
-        for i in range(1,num):
+        for i in range(1,numeroDePassos):
             k1 = self.funcao(t,x[i-1])
             k2 = self.funcao(t+h,x[i-1]+h*k1)
             x[i] = x[i-1] + 0.5*h*(k1+k2)
@@ -102,11 +106,11 @@ class Funcao:
         """Resolve a EDO."""
 
         h = 0.1
-        num = int(1 + (tf-ti)/h)
-        x = [0 for i in range(num)]
+        numeroDePassos = int(1 + (tf-ti)/h)
+        x = [0 for i in range(numeroDePassos)]
         x[0] = x0
         t = ti
-        for i in range(1,num):
+        for i in range(1,numeroDePassos):
             k1 = self.funcao(t,x[i-1])
             k2 = self.funcao(t+0.5*h,x[i-1]+0.5*h*k1)
             k3 = self.funcao(t+0.5*h,x[i-1]+0.5*h*k2)
@@ -120,12 +124,12 @@ class Funcao:
         """Resolve a EDO de segunda ordem."""
 
         h = 0.1
-        num = int(1 + (tf-ti)/h)
-        x = [0 for i in range(num)]
+        numeroDePassos = int(1 + (tf-ti)/h)
+        x = [0 for i in range(numeroDePassos)]
         x[0] = x0
         t = ti
         dx = dx0
-        for i in range(1, num):
+        for i in range(1, numeroDePassos):
             ddx = self.funcao(t,x[i-1],dx)
             x[i] = x[i-1] + dx*h + ddx*h*h*0.5
             dx = dx + ddx*h
@@ -137,12 +141,12 @@ class Funcao:
         """Resolve a Edo de segunda ordem."""
 
         h = 0.1
-        num = int(1 + (tf-ti)/h)
-        x = [0 for i in range(num)]
+        numeroDePassos = int(1 + (tf-ti)/h)
+        x = [0 for i in range(numeroDePassos)]
         x[0] = x0
         t = ti
         dx = dx0
-        for i in range(1, num):
+        for i in range(1, numeroDePassos):
             k1 = 0.5*h*self.funcao(t,x[i-1],dx)
             q = 0.5*h*(dx + 0.5*k1)
             k2 = 0.5*h*self.funcao(t+0.5*h,x[i-1]+q,dx+k1)
@@ -165,14 +169,21 @@ class Funcao:
         """Resolve a EDO."""
 
         h = 0.1
-        num = int(1 + (tf-ti)/h)
-        x = [0 for i in range(num)]
+        numeroDePassos = int(1 + (tf-ti)/h)
+        x = [0 for i in range(numeroDePassos)]
         x[0] = x0
         t = ti
-        for i in range(1,num):
+        for i in range(1,numeroDePassos):
             k = self.funcao(t,x[i-1])
             x[i] = x[i-1] + k*h
             t += h
 
         return x
 
+def polinomialIntegration(X, a, b):
+    n = X.shape[0]
+    V = np.concatenate([X**i for i in range(0,n)], axis = 1)
+    V = V.T
+    B = np.concatenate([[((b**i-a**i)/i)] for i in range(1,n+1)], axis=0)
+    B = b[:,np.newaxis]
+    return (V,B)
